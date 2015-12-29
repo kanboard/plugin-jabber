@@ -2,6 +2,8 @@
 
 namespace Kanboard\Plugin\Jabber;
 
+require_once __DIR__.'/vendor/autoload.php';
+
 use Kanboard\Core\Translator;
 use Kanboard\Core\Plugin\Base;
 
@@ -39,7 +41,7 @@ class Plugin extends Base
 
     public function getPluginVersion()
     {
-        return '1.0.2';
+        return '1.0.3';
     }
 
     public function getPluginHomepage()

@@ -1,0 +1,20 @@
+{
+    "name": "kanboard/plugin-jabber",
+    "type": "project",
+    "description": "Kanboard plugin to receive notifications on Jabber",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frédéric Guillot"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "discard-changes": true
+    },
+    "require" : {
+        "php" : ">=5.3",
+        "fabiang/xmpp" : "0.6.1"
+    }
+}

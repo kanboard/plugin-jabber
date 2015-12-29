@@ -1,0 +1,102 @@
+[
+    {
+        "name": "psr/log",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/log.git",
+            "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+            "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+            "shasum": ""
+        },
+        "time": "2012-12-21 11:40:51",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Psr\\Log\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for logging libraries",
+        "keywords": [
+            "log",
+            "psr",
+            "psr-3"
+        ]
+    },
+    {
+        "name": "fabiang/xmpp",
+        "version": "0.6.1",
+        "version_normalized": "0.6.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/fabiang/xmpp.git",
+            "reference": "47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/fabiang/xmpp/zipball/47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8",
+            "reference": "47fdbe4a60ef0e726c4aaf39d6eb57afd42915c8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "psr/log": "~1.0"
+        },
+        "require-dev": {
+            "behat/behat": "~2.5",
+            "monolog/monolog": "~1.11",
+            "phpunit/phpunit": "~4.3",
+            "satooshi/php-coveralls": "~0.6"
+        },
+        "suggest": {
+            "psr/log-implementation": "Allows more advanced logging of the xmpp connection"
+        },
+        "time": "2014-11-20 08:59:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Fabiang\\Xmpp\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-2-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabian Grutschus",
+                "email": "f.grutschus@lubyte.de",
+                "homepage": "http://www.lubyte.de/",
+                "role": "developer"
+            }
+        ],
+        "description": "Library for XMPP protocol (Jabber) connections",
+        "homepage": "https://github.com/fabiang/xmpp",
+        "keywords": [
+            "jabber",
+            "xmpp"
+        ]
+    }
+]
