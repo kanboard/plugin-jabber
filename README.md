@@ -1,6 +1,8 @@
 Jabber/XMPP plugin for Kanboard
 ===============================
 
+[![Build Status](https://travis-ci.org/kanboard/plugin-jabber.svg?branch=master)](https://travis-ci.org/kanboard/plugin-jabber)
+
 Receive Kanboard notifications on Jabber.
 
 Author
