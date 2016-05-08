@@ -23,10 +23,11 @@ class Plugin extends Base
 
         $this->userNotificationType->setType('jabber', t('Jabber'), '\Kanboard\Plugin\Jabber\Notification\Jabber');
         $this->projectNotificationType->setType('jabber', t('Jabber'), '\Kanboard\Plugin\Jabber\Notification\Jabber');
+    }
 
-        $this->on('app.bootstrap', function($container) {
-            Translator::load($container['config']->getCurrentLanguage(), __DIR__.'/Locale');
-        });
+    public function onStartup()
+    {
+        Translator::load($this->language->getCurrentLanguage(), __DIR__.'/Locale');
     }
 
     public function getPluginDescription()
@@ -41,7 +42,7 @@ class Plugin extends Base
 
     public function getPluginVersion()
     {
-        return '1.0.3';
+        return '1.0.4';
     }
 
     public function getPluginHomepage()
