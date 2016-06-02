@@ -8,7 +8,7 @@ use Fabiang\Xmpp\Client;
 use Fabiang\Xmpp\Protocol\Message;
 use Fabiang\Xmpp\Protocol\Presence;
 use Kanboard\Core\Base;
-use Kanboard\Notification\NotificationInterface;
+use Kanboard\Core\Notification\NotificationInterface;
 
 /**
  * Jabber Notification
@@ -29,10 +29,10 @@ class Jabber extends Base implements NotificationInterface
     public function notifyUser(array $user, $event_name, array $event_data)
     {
         try {
-            $jid = $this->userMetadata->get($user['id'], 'jabber_jid');
+            $jid = $this->userMetadataModel->get($user['id'], 'jabber_jid');
 
             if (! empty($jid)) {
-                $project = $this->project->getById($event_data['task']['project_id']);
+                $project = $this->projectModel->getById($event_data['task']['project_id']);
                 $client = $this->getClient();
 
                 $message = new Message;
@@ -59,13 +59,13 @@ class Jabber extends Base implements NotificationInterface
     public function notifyProject(array $project, $event_name, array $event_data)
     {
         try {
-            $room = $this->projectMetadata->get($project['id'], 'jabber_room');
+            $room = $this->projectMetadataModel->get($project['id'], 'jabber_room');
 
             if (! empty($room)) {
                 $client = $this->getClient();
 
                 $channel = new Presence;
-                $channel->setTo($room)->setNickName($this->config->get('jabber_nickname'));
+                $channel->setTo($room)->setNickname($this->configModel->get('jabber_nickname'));
                 $client->send($channel);
 
                 $message = new Message;
@@ -90,10 +90,10 @@ class Jabber extends Base implements NotificationInterface
      */
     public function getClient()
     {
-        $options = new Options($this->config->get('jabber_server'));
-        $options->setUsername($this->config->get('jabber_username'));
-        $options->setPassword($this->config->get('jabber_password'));
-        $options->setTo($this->config->get('jabber_domain'));
+        $options = new Options($this->configModel->get('jabber_server'));
+        $options->setUsername($this->configModel->get('jabber_username'));
+        $options->setPassword($this->configModel->get('jabber_password'));
+        $options->setTo($this->configModel->get('jabber_domain'));
         $options->setLogger($this->logger);
 
         return new Client($options);
@@ -106,22 +106,23 @@ class Jabber extends Base implements NotificationInterface
      * @param  array     $project
      * @param  string    $event_name
      * @param  array     $event_data
+     * @return string
      */
     public function getMessage(array $project, $event_name, array $event_data)
     {
         if ($this->userSession->isLogged()) {
             $author = $this->helper->user->getFullname();
-            $title = $this->notification->getTitleWithAuthor($author, $event_name, $event_data);
+            $title = $this->notificationModel->getTitleWithAuthor($author, $event_name, $event_data);
         } else {
-            $title = $this->notification->getTitleWithoutAuthor($event_name, $event_data);
+            $title = $this->notificationModel->getTitleWithoutAuthor($event_name, $event_data);
         }
 
         $payload = '['.$project['name'].'] ';
         $payload .= $title;
         $payload .= ' '.$event_data['task']['title'];
 
-        if ($this->config->get('application_url') !== '') {
-            $payload .= ' '.$this->helper->url->to('task', 'show', array('task_id' => $event_data['task']['id'], 'project_id' => $project['id']), '', true);
+        if ($this->configModel->get('application_url') !== '') {
+            $payload .= ' '.$this->helper->url->to('TaskViewController', 'show', array('task_id' => $event_data['task']['id'], 'project_id' => $project['id']), '', true);
         }
 
         return $payload;
