@@ -149,9 +149,9 @@ class Jabber extends Base implements NotificationInterface
                 $payload .= isset($event_data['changes']['description']) ? t('Description').': '. $event_data['changes']['description']."\n" : '';
             } else if ($event_name === TaskModel::EVENT_CREATE) {
                 // Add details of the new task to the message
-                $payload .= isset($event_data['task']['column_title']) ? t('Column:').' '.$event_data['changes']['column_title']."\n" : '';
-                $payload .= isset($event_data['task']['swimlane_name']) ? t('Swimlane:').' '.$event_data['changes']['swimlane_name']."\n" : '';
-                $payload .= isset($event_data['task']['assignee_name']) ? sprintf(t('Assigned to %s', $event_data['changes']['assignee_name']))."\n" : '';
+                $payload .= isset($event_data['task']['column_title']) ? t('Column:').' '.$event_data['task']['column_title']."\n" : '';
+                $payload .= isset($event_data['task']['swimlane_name']) ? t('Swimlane:').' '.$event_data['task']['swimlane_name']."\n" : '';
+                $payload .= isset($event_data['task']['assignee_name']) ? sprintf(t('Assigned to %s', $event_data['task']['assignee_name']))."\n" : '';
                 $payload .= isset($event_data['task']['date_due']) ? t('Due date:').' '.date('D, d M Y', $event_data['task']['date_due'])."\n" : '';
                 $payload .= isset($event_data['task']['description']) ? t('Description').': '.$event_data['task']['description']."\n" : '';
             } else if ($event_name === 'file.create') {
@@ -159,7 +159,7 @@ class Jabber extends Base implements NotificationInterface
                 $payload .= t('Filename').': '.$event_data['file']['name']."\n";
             } else if (in_array($event_name, array(SubtaskModel::EVENT_UPDATE, SubtaskModel::EVENT_CREATE, SubtaskModel::EVENT_DELETE))) {
                 $payload .= isset($event_data['subtask']['title']) ? t('Title:').' '.$event_data['subtask']['title']."\n" : '';
-                $payload .= isset($event_data['subtask']['name']) ? sprintf(t('Assigned to %s', $event_data['changes']['assignee_name']))."\n" : '';
+                $payload .= isset($event_data['subtask']['name']) ? sprintf(t('Assigned to %s', $event_data['subtask']['name']))."\n" : '';
                 $payload .= isset($event_data['subtask']['time_estimated']) ? t('Time estimated:').' '.$event_data['subtask']['time_estimated']."h\n" : '';
                 $payload .= isset($event_data['subtask']['time_spent']) ? t('Time spent:').' '.$event_data['subtask']['time_spent']."h\n" : '';
             }
