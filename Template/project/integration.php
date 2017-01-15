@@ -1,5 +1,5 @@
 <h3><img src="<?= $this->url->dir() ?>plugins/Jabber/jabber-icon.png"/>&nbsp;Jabber (XMPP)</h3>
-<div class="listing">
+<div class="panel">
     <?= $this->form->label(t('Multi-user chat room'), 'jabber_room') ?>
     <?= $this->form->text('jabber_room', $values, array(), array('placeholder="myroom@conference.example.com"')) ?>
 

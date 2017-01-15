@@ -1,5 +1,5 @@
 <h3><img src="<?= $this->url->dir() ?>plugins/Jabber/jabber-icon.png"/>&nbsp;Jabber (XMPP)</h3>
-<div class="listing">
+<div class="panel">
     <?= $this->form->label(t('XMPP server address'), 'jabber_server') ?>
     <?= $this->form->text('jabber_server', $values, array(), array('placeholder="tcp://myserver:5222"')) ?>
     <p class="form-help"><?= t('The server address must use this format: "tcp://hostname:5222"') ?></p>

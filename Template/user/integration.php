@@ -1,5 +1,5 @@
 <h3><img src="<?= $this->url->dir() ?>plugins/Jabber/jabber-icon.png"/>&nbsp;Jabber (XMPP)</h3>
-<div class="listing">
+<div class="panel">
     <?= $this->form->label(t('Jabber Id'), 'jabber_jid') ?>
     <?= $this->form->text('jabber_jid', $values) ?>
 
