@@ -9,6 +9,7 @@ use Fabiang\Xmpp\Protocol\Message;
 use Fabiang\Xmpp\Protocol\Presence;
 use Kanboard\Core\Base;
 use Kanboard\Core\Notification\NotificationInterface;
+use Kanboard\Model\TaskModel;
 
 /**
  * Jabber Notification
@@ -23,24 +24,23 @@ class Jabber extends Base implements NotificationInterface
      *
      * @access public
      * @param  array     $user
-     * @param  string    $event_name
-     * @param  array     $event_data
+     * @param  string    $eventName
+     * @param  array     $eventData
      */
-    public function notifyUser(array $user, $event_name, array $event_data)
+    public function notifyUser(array $user, $eventName, array $eventData)
     {
         try {
             $jid = $this->userMetadataModel->get($user['id'], 'jabber_jid');
 
             if (! empty($jid)) {
-                $project = $this->projectModel->getById($event_data['task']['project_id']);
-                $client = $this->getClient();
-
-                $message = new Message;
-                $message->setMessage($this->getMessage($project, $event_name, $event_data))
-                        ->setTo($jid);
-
-                $client->send($message);
-                $client->disconnect();
+                if ($eventName === TaskModel::EVENT_OVERDUE) {
+                    foreach ($eventData['tasks'] as $task) {
+                        $eventData['task'] = $task;
+                        $this->sendDirectMessage($jid, $eventName, $eventData);
+                    }
+                } else {
+                    $this->sendDirectMessage($jid, $eventName, $eventData);
+                }
             }
 
         } catch (Exception $e) {
@@ -53,10 +53,10 @@ class Jabber extends Base implements NotificationInterface
      *
      * @access public
      * @param  array     $project
-     * @param  string    $event_name
-     * @param  array     $event_data
+     * @param  string    $eventName
+     * @param  array     $eventData
      */
-    public function notifyProject(array $project, $event_name, array $event_data)
+    public function notifyProject(array $project, $eventName, array $eventData)
     {
         try {
             $room = $this->projectMetadataModel->get($project['id'], 'jabber_room');
@@ -64,12 +64,12 @@ class Jabber extends Base implements NotificationInterface
             if (! empty($room)) {
                 $client = $this->getClient();
 
-                $channel = new Presence;
+                $channel = new Presence();
                 $channel->setTo($room)->setNickname($this->configModel->get('jabber_nickname'));
                 $client->send($channel);
 
-                $message = new Message;
-                $message->setMessage($this->getMessage($project, $event_name, $event_data))
+                $message = new Message();
+                $message->setMessage($this->getMessage($project, $eventName, $eventData))
                         ->setTo($room)
                         ->setType(Message::TYPE_GROUPCHAT);
 
@@ -126,5 +126,25 @@ class Jabber extends Base implements NotificationInterface
         }
 
         return $payload;
+    }
+
+    /**
+     * Send XMPP message to someone
+     *
+     * @param $jid
+     * @param $eventName
+     * @param $eventData
+     */
+    public function sendDirectMessage($jid, $eventName, $eventData)
+    {
+        $project = $this->projectModel->getById($eventData['task']['project_id']);
+        $client = $this->getClient();
+
+        $message = new Message();
+        $message->setMessage($this->getMessage($project, $eventName, $eventData))
+            ->setTo($jid);
+
+        $client->send($message);
+        $client->disconnect();
     }
 }

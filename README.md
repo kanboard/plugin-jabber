@@ -14,7 +14,7 @@ Author
 Requirements
 ------------
 
-- Kanboard >= 1.0.29
+- Kanboard >= 1.0.37
 - XMPP server
 
 Installation
@@ -56,3 +56,10 @@ Go to **Settings > Integrations > Jabber** and fill the form:
 
 - Enable the debug mode
 - All connection errors with the XMPP server are recorded in the log files `data/debug.log` or syslog
+
+Changes
+-------
+
+### Version 1.0.7
+
+- Fix bug concerning task overdue events
