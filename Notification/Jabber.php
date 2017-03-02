@@ -62,19 +62,7 @@ class Jabber extends Base implements NotificationInterface
             $room = $this->projectMetadataModel->get($project['id'], 'jabber_room');
 
             if (! empty($room)) {
-                $client = $this->getClient();
-
-                $channel = new Presence();
-                $channel->setTo($room)->setNickname($this->configModel->get('jabber_nickname'));
-                $client->send($channel);
-
-                $message = new Message();
-                $message->setMessage($this->getMessage($project, $eventName, $eventData))
-                        ->setTo($room)
-                        ->setType(Message::TYPE_GROUPCHAT);
-
-                $client->send($message);
-                $client->disconnect();
+                $this->sendGroupMessage($project, $room, $eventName, $eventData);
             }
 
         } catch (Exception $e) {
@@ -131,9 +119,9 @@ class Jabber extends Base implements NotificationInterface
     /**
      * Send XMPP message to someone
      *
-     * @param $jid
-     * @param $eventName
-     * @param $eventData
+     * @param string $jid
+     * @param string $eventName
+     * @param array  $eventData
      */
     public function sendDirectMessage($jid, $eventName, $eventData)
     {
@@ -143,6 +131,31 @@ class Jabber extends Base implements NotificationInterface
         $message = new Message();
         $message->setMessage($this->getMessage($project, $eventName, $eventData))
             ->setTo($jid);
+
+        $client->send($message);
+        $client->disconnect();
+    }
+
+    /**
+     * Send XMPP GroupChat message
+     *
+     * @param array  $project
+     * @param string $room
+     * @param string $eventName
+     * @param array  $eventData
+     */
+    public function sendGroupMessage(array $project, $room, $eventName, array $eventData)
+    {
+        $client = $this->getClient();
+
+        $channel = new Presence();
+        $channel->setTo($room)->setNickname($this->configModel->get('jabber_nickname'));
+        $client->send($channel);
+
+        $message = new Message();
+        $message->setMessage($this->getMessage($project, $eventName, $eventData))
+            ->setTo($room)
+            ->setType(Message::TYPE_GROUPCHAT);
 
         $client->send($message);
         $client->disconnect();
