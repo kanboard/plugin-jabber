@@ -3,7 +3,7 @@
     <?= $this->form->label(t('Jabber Id'), 'jabber_jid') ?>
     <?= $this->form->text('jabber_jid', $values) ?>
 
-    <p class="form-help"><a href="https://kanboard.net/plugin/jabber" target="_blank"><?= t('Help on Jabber integration') ?></a></p>
+    <p class="form-help"><a href="https://github.com/kanboard/plugin-jabber#configuration" target="_blank"><?= t('Help on Jabber integration') ?></a></p>
 
     <div class="form-actions">
         <input type="submit" value="<?= t('Save') ?>" class="btn btn-blue"/>

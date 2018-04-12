@@ -60,6 +60,11 @@ Go to **Settings > Integrations > Jabber** and fill the form:
 Changes
 -------
 
+### Version 1.0.8
+
+- Update XMPP library
+- Update Documentation links
+
 ### Version 1.0.7
 
 - Fix bug concerning task overdue events

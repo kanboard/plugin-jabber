@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2014 Fabian Grutschus. All rights reserved.
+ * Copyright 2016 Fabian Grutschus. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,22 +29,21 @@
  * either expressed or implied, of the copyright holders.
  *
  * @author    Fabian Grutschus <f.grutschus@lubyte.de>
- * @copyright 2014 Fabian Grutschus. All rights reserved.
+ * @copyright 2016 Fabian Grutschus. All rights reserved.
  * @license   BSD
  * @link      http://github.com/fabiang/xmpp
  */
 
-namespace Fabiang\Xmpp\EventListener\Stream;
+namespace Fabiang\Xmpp\EventListener\Stream\Authentication;
 
-use Fabiang\Xmpp\EventListener\BlockingEventListenerInterface;
-use Fabiang\Xmpp\Event\XMLEvent;
+use Fabiang\Xmpp\EventListener\AbstractEventListener;
 
 /**
- * Listener
+ * Handler for "anonymous" authentication mechanism.
  *
- * @package Xmpp\EventListener
+ * @package Xmpp\EventListener\Authentication
  */
-class Session extends AbstractSessionEvent implements BlockingEventListenerInterface
+class Anonymous extends AbstractEventListener implements AuthenticationInterface
 {
 
     /**
@@ -52,39 +51,16 @@ class Session extends AbstractSessionEvent implements BlockingEventListenerInter
      */
     public function attachEvents()
     {
-        $input = $this->getInputEventManager();
-        $input->attach('{urn:ietf:params:xml:ns:xmpp-session}session', [$this, 'sessionStart']);
-        $input->attach('{jabber:client}iq', [$this, 'iq']);
+
     }
 
     /**
-     * Handle session event.
-     *
-     * @param XMLEvent $event
-     * @return void
+     * {@inheritDoc}
      */
-    public function sessionStart(XMLEvent $event)
+    public function authenticate($username, $password)
     {
-        $this->respondeToFeatures(
-            $event,
-            '<iq type="set" id="%s"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>'
+        $this->getConnection()->send(
+            '<auth xmlns="urn:ietf:params:xml:ns:xmpp-sasl" mechanism="ANONYMOUS"/>'
         );
-    }
-
-    /**
-     * Handle iq event.
-     *
-     * @param XMLEvent $event
-     * @retrun void
-     */
-    public function iq(XMLEvent $event)
-    {
-        if ($event->isEndTag()) {
-            /* @var $element \DOMElement */
-            $element = $event->getParameter(0);
-            if ($this->getId() === $element->getAttribute('id')) {
-                $this->blocking = false;
-            }
-        }
     }
 }

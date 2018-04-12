@@ -36,55 +36,76 @@
 
 namespace Fabiang\Xmpp\EventListener\Stream;
 
-use Fabiang\Xmpp\EventListener\BlockingEventListenerInterface;
 use Fabiang\Xmpp\Event\XMLEvent;
+use Fabiang\Xmpp\EventListener\AbstractEventListener;
+use Fabiang\Xmpp\EventListener\BlockingEventListenerInterface;
+use Fabiang\Xmpp\Protocol\User\User;
 
 /**
  * Listener
  *
  * @package Xmpp\EventListener
  */
-class Session extends AbstractSessionEvent implements BlockingEventListenerInterface
+class Register extends AbstractEventListener implements BlockingEventListenerInterface
 {
+
+    /**
+     * Blocking.
+     *
+     * @var boolean
+     */
+    protected $blocking = false;
+
+    /**
+     * user object.
+     *
+     * @var User
+     */
+    protected $userObject;
 
     /**
      * {@inheritDoc}
      */
     public function attachEvents()
     {
-        $input = $this->getInputEventManager();
-        $input->attach('{urn:ietf:params:xml:ns:xmpp-session}session', [$this, 'sessionStart']);
-        $input->attach('{jabber:client}iq', [$this, 'iq']);
+        $this->getOutputEventManager()
+            ->attach('{http://jabber.org/protocol/commands}command', [$this, 'query']);
+        $this->getInputEventManager()
+            ->attach('{http://jabber.org/protocol/commands}command', [$this, 'result']);
     }
 
     /**
-     * Handle session event.
+     * Sending a query request for roster sets listener to blocking mode.
      *
-     * @param XMLEvent $event
      * @return void
      */
-    public function sessionStart(XMLEvent $event)
+    public function query()
     {
-        $this->respondeToFeatures(
-            $event,
-            '<iq type="set" id="%s"><session xmlns="urn:ietf:params:xml:ns:xmpp-session"/></iq>'
-        );
+        $this->blocking = true;
     }
 
     /**
-     * Handle iq event.
+     * Result received.
      *
-     * @param XMLEvent $event
-     * @retrun void
+     * @param \Fabiang\Xmpp\Event\XMLEvent $event
+     * @return void
      */
-    public function iq(XMLEvent $event)
+    public function result(XMLEvent $event)
     {
         if ($event->isEndTag()) {
             /* @var $element \DOMElement */
-            $element = $event->getParameter(0);
-            if ($this->getId() === $element->getAttribute('id')) {
-                $this->blocking = false;
-            }
+            $sid = $event->getParameter(0)->getAttribute('sessionid');
+
+            $this->getOptions()->setSid($sid);
+            $this->blocking = false;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isBlocking()
+    {
+        return $this->blocking;
     }
 }
